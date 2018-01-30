@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, NewRecipeActivity::class.java)
             startActivity(intent)
         }
+
+        // create or load hash map
+        val recipemap = HashMap<Int, Long>()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

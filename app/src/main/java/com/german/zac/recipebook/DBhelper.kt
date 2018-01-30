@@ -1,6 +1,8 @@
 package com.german.zac.recipebook
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
@@ -19,6 +21,24 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db, oldVersion, newVersion)
     }
+
+    @Throws(SQLiteConstraintException::class)
+    fun recipeCreate(recipe: RecipeModel): Long {
+        val db = writableDatabase
+
+        val values = ContentValues()
+        values.put(RecipeEntryContract.RecipeEntry.COLUMN_TITLE, recipe.title)
+        values.put(RecipeEntryContract.RecipeEntry.COLUMN_GROUP, recipe.group)
+        values.put(RecipeEntryContract.RecipeEntry.COLUMN_BODY, recipe.body)
+
+        return db.insert(RecipeEntryContract.RecipeEntry.TABLE_NAME, null, values)
+    }
+
+
+
+
+
+
     companion object {
         // If you change the database schema, you must increment the database version.
         val DATABASE_VERSION = 1

@@ -7,9 +7,9 @@ object RecipeEntryContract {
     class RecipeEntry : BaseColumns {
         companion object {
             const val TABLE_NAME = "RecipeBook"
-            const val COLUMN_TITLE = "Title"
-            const val COLUMN_GROUP = "Group"
-            const val COLUMN_BODY = "Body"
+            const val COLUMN_TITLE = "title"
+            const val COLUMN_GROUP = "group"
+            const val COLUMN_BODY = "body"
         }
     }
 }
