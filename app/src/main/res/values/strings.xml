@@ -7,4 +7,6 @@
     <string name="save">Save</string>
     <string name="text_search">Text Search</string>
     <string name="filter_search">Filter Search</string>
+    <string name="search_recipes">Search Recipes</string>
+    <string name="new_recipe">New Recipe</string>
 </resources>

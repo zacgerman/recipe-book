@@ -1,5 +1,6 @@
 package com.german.zac.recipebook
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -31,7 +32,14 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.app_bar_search ->{
+                val intent = Intent(this, SearchActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.action_settings -> {
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
