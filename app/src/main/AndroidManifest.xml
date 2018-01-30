@@ -19,13 +19,14 @@
         <activity
             android:name=".NewRecipeActivity"
             android:label="@string/new_recipe"
-            android:parentActivityName=".MainActivity"
-        />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SearchActivity"
             android:label="@string/search_recipes"
-            android:parentActivityName=".MainActivity"
-        />
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".ViewRecipeActivity"
+            android:label="@string/view_recipe"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
