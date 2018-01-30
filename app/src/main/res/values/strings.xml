@@ -5,4 +5,6 @@
     <string name="nr_title">Recipe Title</string>
     <string name="recipe_body">Recipe Body</string>
     <string name="save">Save</string>
+    <string name="text_search">Text Search</string>
+    <string name="filter_search">Filter Search</string>
 </resources>
