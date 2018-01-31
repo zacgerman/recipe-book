@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_new_recipe.*
 
 class NewRecipeActivity : AppCompatActivity() {
 
-    val map = intent.getSerializableExtra("hash")
+    private val map = intent.getSerializableExtra("hash")!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +35,13 @@ class NewRecipeActivity : AppCompatActivity() {
     }
 
     private fun addToDatabase(map: HashMap<String, Long>): Boolean {
-        var title = etRecipeTitle.text.toString()
-        var r = RecipeModel(title,"Ungrouped",etRecipeBody.text.toString())
+        val title = etRecipeTitle.text.toString()
+        val r = RecipeModel(title,"Ungrouped",etRecipeBody.text.toString())
 
         //make length appropriate
-        if (title.length > 32){
-            title = title.substring(0,31)
-        }
+//        if (title.length > 32){
+//            title = title.substring(0,31)
+//        }
 
         //check for repeating key
         if (map.containsKey(title)){
@@ -50,7 +50,7 @@ class NewRecipeActivity : AppCompatActivity() {
         }
 
         //add recipe to map and db
-        map.put(title, RecipeDbHelper.gethelp(this).createRecipe(r))
+        map[title] = RecipeDbHelper.gethelp(this).createRecipe(r)
 
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("hash", map)

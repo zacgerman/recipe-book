@@ -5,11 +5,13 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
-import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
+import android.widget.AdapterView.OnItemClickListener
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,8 +34,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val lv = findViewById(R.id.lvRecipes) as ListView
+        val lv = this.findViewById<ListView>(R.id.lvRecipes)
         lv.adapter = ListAdapter(this)
+        lv.onItemClickListener = this.clickedHandler
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,24 +63,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private class ListAdapter(context: Context): BaseAdapter(){
-        internal var maplist = getmap().values.toTypedArray()
-        private val mInflator: LayoutInflater
+    private val clickedHandler = OnItemClickListener { parent, v, position, id ->
+        val intent = Intent(parent.context, ViewRecipeActivity::class.java)
+//  todo get better key
+        val k = getmap()[v.toString()]
+        intent.putExtra("hashvalue", k)
+        startActivity(intent)
+    }
 
-        init {
-            this.mInflator = LayoutInflater.from(context)
-        }
+    private class ListAdapter(context: Context): BaseAdapter(){
+        internal var maplist = getmap().keys.toTypedArray()
+//        internal var maplist = getmap().values.toTypedArray()
+
+        private val mInflator: LayoutInflater = LayoutInflater.from(context)
 
         override fun getCount(): Int {
             return maplist.size
         }
 
-        fun getItem(position: Int, context: Context): String {
-            val r = RecipeDbHelper.gethelp(context).readRecipe(maplist[position], context)
-            if (r != null) {
-                return r.title
-            }
-            return "error"
+        override fun getItem(position: Int): String {
+            return maplist[position]
+//            parameter context
+//            val r = RecipeDbHelper.gethelp(context).readRecipe(maplist[position], context)
+//            if (r != null) return r.title
+//            return "error"
         }
 
         override fun getItemId(position: Int): Long {
@@ -98,17 +107,15 @@ class MainActivity : AppCompatActivity() {
                 vh = view.tag as ListRowHolder
             }
 
-            vh.label.text = maplist[position]
+            vh.label.text = getItem(position)
             return view
         }
     }
 
     private class ListRowHolder(row: View?) {
-        public val label: TextView
+        val label: TextView = row?.findViewById(R.id.label) as TextView
 
-        init {
-            this.label = row?.findViewById(R.id.label) as TextView
-        }
     }
+
 
 }

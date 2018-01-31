@@ -68,10 +68,6 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return list[0]
     }
 
-//
-
-
-
     companion object {
         // If you change the database schema, you must increment the database version.
         val DATABASE_VERSION = 1
