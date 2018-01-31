@@ -2,10 +2,13 @@ package com.german.zac.recipebook
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import android.widget.Toast
 
 class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -23,7 +26,7 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     @Throws(SQLiteConstraintException::class)
-    fun recipeCreate(recipe: RecipeModel): Long {
+    fun createRecipe(recipe: RecipeModel): Long {
         val db = writableDatabase
 
         val values = ContentValues()
@@ -34,8 +37,38 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.insert(RecipeEntryContract.RecipeEntry.TABLE_NAME, null, values)
     }
 
+    fun readRecipe(id: Long, context: Context): RecipeModel?{
+        val list = ArrayList<RecipeModel>()
+        val db = writableDatabase
+        var cursor: Cursor?
+        try {
+            cursor = db.rawQuery("select * from " + RecipeEntryContract.RecipeEntry.TABLE_NAME + " WHERE " + BaseColumns._ID + "=" + id, null)
+        } catch (e: SQLiteException) {
+            // if table not yet present, create it
+            db.execSQL(SQL_CREATE_ENTRIES)
+            return null
+        }
 
+        var title: String
+        var group: String
+        var body: String
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                title = cursor.getString(cursor.getColumnIndex(RecipeEntryContract.RecipeEntry.COLUMN_TITLE))
+                group = cursor.getString(cursor.getColumnIndex(RecipeEntryContract.RecipeEntry.COLUMN_GROUP))
+                body = cursor.getString(cursor.getColumnIndex(RecipeEntryContract.RecipeEntry.COLUMN_BODY))
 
+                list.add(RecipeModel(title, group, body))
+                cursor.moveToNext()
+            }
+        }
+        if (list.size != 1) {
+            Toast.makeText(context, "Repeat Row_ID, returning first of the list", Toast.LENGTH_LONG).show()
+        }
+        return list[0]
+    }
+
+//
 
 
 
@@ -52,5 +85,15 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                         "${RecipeEntryContract.RecipeEntry.COLUMN_BODY} TEXT)"
 
         private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${RecipeEntryContract.RecipeEntry.TABLE_NAME}"
+
+        private var bdhelp: RecipeDbHelper? = null
+
+        fun gethelp(context: Context): RecipeDbHelper {
+            if (bdhelp == null) {
+                this.bdhelp = RecipeDbHelper(context.applicationContext)
+            }
+            return bdhelp as RecipeDbHelper
+
+        }
     }
 }
